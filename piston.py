@@ -44,4 +44,26 @@ def makePiston(myLookAxis, myLookUpAxis, myCon1, myCon2):
     cmds.orientConstraint(myLoc1, myCon1, mo=True)
     cmds.orientConstraint(myLoc2, myCon2, mo=True)
 
+def makeLookAt_makeLookAtPos(myLookAxis, myLookUpAxis, myDriver, myDriven, myLookAtPos):
+    # myLookAxis = 'Z'
+    # myLookUpAxis = 'Y'
+    # myDriver = 'FKHatchCoverClipLook_L'
+    # myDriven = 'FKHatchCoverClipB_L'
+
+    myNul = cmds.group(n=myDriven+'_look_nul', em=True)
+    cmds.matchTransform(myNul, myLookAtPos)
+
+    myLocList = cmds.spaceLocator(n=myDriven+'_look_loc')
+    myLoc = myLocList[0]
+    cmds.matchTransform(myLoc,myLookAtPos)
+    cmds.parent(myLoc, myNul)
+
+    myUpList = cmds.duplicate(myLoc)
+    myUp = myUpList[0]
+    myUp = cmds.rename(myUp, myDriven+'_look_up')
+
+    cmds.aimConstraint(myLoc, myDriven, aim=(0,0,1), wut='object', wuo=myUp, mo=True)
+
+    cmds.parentConstraint(myDriver, myNul, mo=True)
+
 # makePiston('Z', 'Y', 'FKFingerUpA4_R', 'FKFingerUpB_R')
